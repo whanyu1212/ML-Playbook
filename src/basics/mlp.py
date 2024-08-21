@@ -166,8 +166,10 @@ class MLP:
 
     def fit(
         self,
-        X: np.array,
-        y: np.array,
+        X_train: np.array,
+        y_train: np.array,
+        X_val: np.array,
+        y_val: np.array,
         epochs: int,
         batch_size: int,
         learning_rate: float,
@@ -175,21 +177,23 @@ class MLP:
         """Fit the MLP model to the given data by batch gradient descent.
 
         Args:
-            X (np.array): Input data
-            y (np.array): True labels
+            X_train (np.array): Training input data
+            y_train (np.array): Training true labels
+            X_val (np.array): Validation input data
+            y_val (np.array): Validation true labels
             epochs (int): Number of epochs to train the model
             batch_size (int): Number of samples in each mini-batch
             learning_rate (float): Step size to update the weights in each iteration.
         """
-        n_samples = X.shape[0]
+        n_samples = X_train.shape[0]
         n_batches = int(np.ceil(n_samples / batch_size))
 
         for epoch in range(epochs):
             # Shuffle data at the beginning of each epoch
             indices = np.arange(n_samples)
             np.random.shuffle(indices)
-            X_shuffled = X[indices]
-            y_shuffled = y[indices]
+            X_shuffled = X_train[indices]
+            y_shuffled = y_train[indices]
 
             for batch in range(n_batches):
                 start = batch * batch_size
@@ -206,13 +210,22 @@ class MLP:
                 )
                 self.update_weights(gradients, learning_rate)
 
-            if epoch % 10 == 0:
-                loss = self.compute_loss(X, y)
-                predictions = self.predict(X)
-                accuracy = np.mean(np.argmax(y, axis=1) == predictions)
-                print(
-                    f"Epoch {epoch+1}, Loss: {Fore.RED}{loss:.4f}{Style.RESET_ALL}, Accuracy: {Fore.GREEN}{accuracy:.4f}{Style.RESET_ALL}"
-                )
+            train_loss = self.compute_loss(X_train, y_train)
+            train_predictions = self.predict(X_train)
+            train_accuracy = np.mean(y_train == train_predictions)
+
+            # Validation loss and accuracy
+            val_loss = self.compute_loss(X_val, y_val)
+            val_predictions = self.predict(X_val)
+            val_accuracy = np.mean(y_val == val_predictions)
+
+            print(
+                f"Epoch {epoch+1}, "
+                f"Train Loss: {Fore.RED}{train_loss:.4f}{Style.RESET_ALL}, "
+                f"Train Accuracy: {Fore.GREEN}{train_accuracy:.4f}{Style.RESET_ALL}, "
+                f"Val Loss: {Fore.RED}{val_loss:.4f}{Style.RESET_ALL}, "
+                f"Val Accuracy: {Fore.GREEN}{val_accuracy:.4f}{Style.RESET_ALL}"
+            )
 
     def compute_loss(self, X: np.array, y: np.array) -> float:
         """Compute the loss of the model on the given data.
@@ -258,5 +271,5 @@ class MLP:
             float: accuracy of the model
         """
         predictions = self.predict(X)
-        accuracy = np.mean(np.argmax(y, axis=1) == predictions)
+        accuracy = np.mean(y == predictions)
         return accuracy
