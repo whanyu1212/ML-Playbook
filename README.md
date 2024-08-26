@@ -19,4 +19,8 @@ The repository is organized as follows:
 
 ## Classical ML for structured data
 
-## Deep Learning 
+## Deep Learning Examples (PyTorch & Flux)
+| Framework | Link                                      |
+|-----------|-------------------------------------------|
+| PyTorch   | [Introduction to Tensors](notebook/intro_to_tensors.ipynb) |
+| PyTorch   | [Basic nn in PyTorch](notebook/basic_nn_pytorch.ipynb)      |
