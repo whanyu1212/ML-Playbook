@@ -24,3 +24,4 @@ The repository is organized as follows:
 |-----------|-------------------------------------------|
 | PyTorch   | [Introduction to Tensors](notebook/intro_to_tensors.ipynb) |
 | PyTorch   | [Basic nn in PyTorch](notebook/basic_nn_pytorch.ipynb)      |
+| PyTorch   | [Computation Graph and XOR example](notebook/computation_graph_and_xor_example.ipynb)|
